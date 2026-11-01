@@ -90,32 +90,32 @@ PORT=3000
 ## Screenshots
 
 ### 1. `GET /books/` – Retrieve All Books (Status 200 OK)
-![GET All Books](screenshots/01_get_all_books.png)
+![GET All Books](screenshots/Screenshot%202026-10-31%20153706.png)
 
 ---
 
 ### 2. `GET /books/1/` – Retrieve Single Book by ID (Status 200 OK)
-![GET Single Book](screenshots/02_get_single_book.png)
+![GET Single Book](screenshots/Screenshot%202026-10-31%20153707.png)
 
 ---
 
 ### 3. `GET /books/999/` – Book Not Found Error (Status 404 Not Found)
-![Book Not Found](screenshots/03_get_book_not_found.png)
+![Book Not Found](screenshots/Screenshot%202026-10-31%20153706-2.png)
 
 ---
 
 ### 4. `POST /books/` – Add New Book (Status 201 Created)
-![POST Create Book](screenshots/04_post_create_book.png)
+![POST Create Book](screenshots/Screenshot%202026-10-31%20153810.png)
 
 ---
 
 ### 5. `PUT /books/:bookId/` – Update Book Details (Status 200 OK)
-![PUT Update Book](screenshots/05_put_update_book.png)
+![PUT Update Book](screenshots/Screenshot%202026-10-31%20153810-2.png)
 
 ---
 
 ### 6. `DELETE /books/:bookId/` – Delete Book by ID (Status 200 OK)
-![DELETE Book](screenshots/06_delete_book.png)
+![DELETE Book](screenshots/Screenshot%202026-10-31%20153810-3.png)
 
 ---
 
