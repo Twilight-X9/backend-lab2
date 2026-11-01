@@ -26,7 +26,7 @@ async function initializeDatabase() {
 
     console.log(`Connected to SQLite database at: ${DB_PATH}`);
 
-    // Create table schema
+    // Create the table if needed.
     await db.exec(`
       CREATE TABLE IF NOT EXISTS book (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,7 +37,7 @@ async function initializeDatabase() {
       );
     `);
 
-    // Check existing count
+    // Seed the database only when it is empty.
     const countResult = await db.get('SELECT COUNT(*) AS total FROM book');
     if (countResult.total === 0) {
       console.log('Seeding initial 10 book records...');

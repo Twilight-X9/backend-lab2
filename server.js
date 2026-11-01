@@ -9,10 +9,10 @@ const DB_PATH = path.join(__dirname, 'books.db');
 
 let db = null;
 
-// Middleware to parse incoming JSON payloads
+// Parse JSON request bodies.
 app.use(express.json());
 
-// Initialize SQLite database connection and start Express server
+// Open SQLite before starting the server.
 async function initializeDBAndServer() {
   try {
     db = await open({
@@ -22,7 +22,7 @@ async function initializeDBAndServer() {
 
     console.log('Database connected successfully.');
 
-    // Ensure the book table exists
+    // Create the table if needed.
     await db.exec(`
       CREATE TABLE IF NOT EXISTS book (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +42,7 @@ async function initializeDBAndServer() {
   }
 }
 
-// Route 1: GET /books/ - Retrieve all books
+// List all books.
 app.get('/books/', async (req, res) => {
   try {
     const getBooksQuery = 'SELECT * FROM book ORDER BY id ASC';
@@ -53,7 +53,7 @@ app.get('/books/', async (req, res) => {
   }
 });
 
-// Route 2: GET /books/:bookId/ - Retrieve a specific book by ID
+// Get one book by ID.
 app.get('/books/:bookId/', async (req, res) => {
   try {
     const { bookId } = req.params;
@@ -70,7 +70,7 @@ app.get('/books/:bookId/', async (req, res) => {
   }
 });
 
-// Route 3: POST /books/ - Add a new book
+// Add a book.
 app.post('/books/', async (req, res) => {
   try {
     const { title, author, price, pages } = req.body;
@@ -97,13 +97,13 @@ app.post('/books/', async (req, res) => {
   }
 });
 
-// Route 4: PUT /books/:bookId/ - Update an existing book by ID
+// Update a book.
 app.put('/books/:bookId/', async (req, res) => {
   try {
     const { bookId } = req.params;
     const { title, author, price, pages } = req.body;
 
-    // Check if the book exists
+    // Return 404 when the book does not exist.
     const existingBook = await db.get('SELECT * FROM book WHERE id = ?', [bookId]);
     if (!existingBook) {
       return res.status(404).json({ error: 'Not Found', message: `Book with id ${bookId} not found.` });
@@ -134,12 +134,12 @@ app.put('/books/:bookId/', async (req, res) => {
   }
 });
 
-// Route 5: DELETE /books/:bookId/ - Delete a book by ID
+// Delete a book.
 app.delete('/books/:bookId/', async (req, res) => {
   try {
     const { bookId } = req.params;
 
-    // Check if the book exists
+    // Return 404 when the book does not exist.
     const existingBook = await db.get('SELECT * FROM book WHERE id = ?', [bookId]);
     if (!existingBook) {
       return res.status(404).json({ error: 'Not Found', message: `Book with id ${bookId} not found.` });
@@ -154,7 +154,7 @@ app.delete('/books/:bookId/', async (req, res) => {
   }
 });
 
-// Catch-all 404 handler for undefined routes
+// Return 404 for unknown routes.
 app.use((req, res) => {
   res.status(404).json({
     status: 404,
@@ -163,5 +163,5 @@ app.use((req, res) => {
   });
 });
 
-// Start initialization
+// Start the server after the database opens.
 initializeDBAndServer();

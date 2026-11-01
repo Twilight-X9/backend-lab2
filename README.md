@@ -17,9 +17,9 @@ I connected an Express server to `books.db` and added routes to list, add, updat
 
 ---
 
-## Database Schema & Seed Data
+## Database table
 
-The application uses an embedded SQLite database with the following table schema:
+I store the books in a local SQLite database. The `book` table has these columns:
 
 ```sql
 CREATE TABLE IF NOT EXISTS book (
@@ -31,30 +31,30 @@ CREATE TABLE IF NOT EXISTS book (
 );
 ```
 
-The database is pre-seeded with 10 standard computer science and software engineering books.
+The seed script inserts ten books when the table is empty.
 
 ---
 
-## How to Run
+## How to run
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18+ recommended)
 - npm (v9+)
 
-### 1. Installation
+### Install dependencies
 Navigate into the `lab-02` directory and install dependencies:
 ```bash
 cd lab-02
 npm install
 ```
 
-### 2. Environment Variables
+### Port
 No required external environment variables. Optionally customize the listening port:
 ```env
 PORT=3000
 ```
 
-### 3. Execution Commands
+### Start the server
 * **Start Primary Server:**
   ```bash
   npm start
@@ -62,7 +62,7 @@ PORT=3000
   ```
   Runs at `http://localhost:3000`
 
-* **Development Mode (Auto-reload on code change via Nodemon):**
+* **Development mode (restarts after code changes):**
   ```bash
   npm run dev
   ```
@@ -74,7 +74,7 @@ PORT=3000
 
 ---
 
-## Endpoints Table
+## Endpoints
 
 | Method | Endpoint | Description | Status Code | Request Body / Parameters |
 | :--- | :--- | :--- | :---: | :--- |
@@ -122,28 +122,21 @@ PORT=3000
 ## Viva notes
 
 ### Q1: Why await the database call?
-* Database read and write operations are **asynchronous I/O operations** that interact with the file system or network. If we do not use `await`, JavaScript returns an unresolved `Promise` immediately instead of waiting for the database to complete the operation. Using `await` halts the execution of that specific `async` function until the database query resolves with actual rows or writes, ensuring consistency and preventing race conditions.
 
-### Q2: What is SQL injection and how do placeholders (`?`) prevent it?
-* **SQL Injection:** A critical security vulnerability where untrusted client input (such as a string containing `'; DROP TABLE book; --`) is concatenated directly into a SQL query string. The database interprets the attacker's input as executable SQL commands.
-* **How Placeholders Prevent It:** By using parameterised queries (`WHERE id = ?`, `[bookId]`), the database driver separates query code from data. The database compiles the SQL structure first, and treats the placeholder values purely as literal data, rendering malicious SQL commands harmless.
+`await` waits for the database query to finish, so the route can use its result before sending a response.
 
-### Q3: When is `PUT` used instead of `POST`?
-* **`POST`**: Used to **create** a new subordinate resource. The server determines the URL/ID of the newly created entity (e.g., `POST /books/` creates a new book and assigns an ID). `POST` requests are typically **not idempotent** (sending the same POST request twice creates two separate records).
-* **`PUT`**: Used to **replace or update** an existing resource identified by a specific URL (e.g., `PUT /books/5/`). `PUT` is designed to be **idempotent** (sending the exact same PUT request multiple times leaves the resource in the identical state).
+### Q2: What is SQL injection, and how do placeholders help?
+
+SQL injection happens when request data is treated as part of a SQL command. A `?` placeholder passes that value separately from the query.
+
+### Q3: When do I use PUT instead of POST?
+
+I use POST to create a book. I use PUT to update a book at a specific ID.
 
 ---
 
 ## Problems I faced
 
-1. **Native Addon Compilation on Windows & Node 26**:
-   * *Problem:* `sqlite3` relies on a C++ native addon (`node_sqlite3.node`). Under newer Node runtimes, prebuild auto-detection occasionally requires explicit N-API prebuild installation.
-   * *Solution:* Leveraged `prebuild-install -r napi` to download and unpack the prebuilt binary directly, preventing prolonged C++ compilation times.
-
-2. **Server Lifecycle Synchronization**:
-   * *Problem:* If the Express server begins accepting HTTP requests before the SQLite database connection finishes opening, initial requests will encounter a `db is null` runtime crash.
-   * *Solution:* Implemented `initializeDBAndServer()` to sequentially `await open(...)` before invoking `app.listen(...)`. If the database fails to open, the process logs an error and exits gracefully without leaving an unstable server running.
-
-3. **Data Validation for Mutations**:
-   * *Problem:* Unchecked `POST` requests could insert empty or `null` records into SQLite.
-   * *Solution:* Added request body verification to ensure required fields (`title`, `author`, `price`, `pages`) exist before triggering database execution, returning standard `400 Bad Request` responses on invalid payloads.
+1. `sqlite3` uses a native addon. On Node 26, I installed its N-API prebuilt binary with `prebuild-install -r napi` to avoid building it locally.
+2. The server needs an open database before requests arrive. `initializeDBAndServer()` waits for SQLite to open before calling `app.listen()`; it exits if opening the database fails.
+3. I check for all four required fields before inserting a book. Incomplete POST requests receive a 400 response.
