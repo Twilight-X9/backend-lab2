@@ -2,13 +2,12 @@
 
 **Pinisetti Sai Babu** • **252U1R1192** • **Section: S-019**  
 **Course:** Backend Development Fundamentals (Year II Term II) • Aurora  
-**Faculty:** Joel Prashanth D  
 
 ---
 
 ## Live link
 Deployment: add the Render URL here after creating the web service.  
-**GitHub Repository:** [https://github.com/Twilight-X9/backend-lab2](https://github.com/Twilight-X9/backend-lab2)
+**GitHub Repository:** [https://backend-lab2-2.onrender.com/books/](https://backend-lab2-2.onrender.com/books/)
 
 ---
 
@@ -58,7 +57,6 @@ PORT=3000
 * **Start Primary Server:**
   ```bash
   npm start
-  # or: node server.js
   ```
   Runs at `http://localhost:3000`
 
@@ -116,22 +114,6 @@ PORT=3000
 
 ### 6. `DELETE /books/:bookId/` – Delete Book by ID (Status 200 OK)
 ![DELETE Book](screenshots/Screenshot%202026-10-31%20153810-3.png)
-
----
-
-## Viva notes
-
-### Q1: Why await the database call?
-
-`await` waits for the database query to finish, so the route can use its result before sending a response.
-
-### Q2: What is SQL injection, and how do placeholders help?
-
-SQL injection happens when request data is treated as part of a SQL command. A `?` placeholder passes that value separately from the query.
-
-### Q3: When do I use PUT instead of POST?
-
-I use POST to create a book. I use PUT to update a book at a specific ID.
 
 ---
 
