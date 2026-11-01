@@ -7,7 +7,7 @@
 ---
 
 ## Live link
-*Not applicable (Local database server)*  
+Deployment: add the Render URL here after creating the web service.  
 **GitHub Repository:** [https://github.com/Twilight-X9/backend-lab2](https://github.com/Twilight-X9/backend-lab2)
 
 ---

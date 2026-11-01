@@ -33,7 +33,7 @@ async function initializeDBAndServer() {
       );
     `);
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running at http://localhost:${PORT}/`);
     });
   } catch (error) {
