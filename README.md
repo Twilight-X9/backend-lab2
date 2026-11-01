@@ -13,7 +13,7 @@
 ---
 
 ## Objective
-Connect an Express server to an embedded SQLite database (`books.db`) using the `sqlite` and `sqlite3` drivers. Expose complete CRUD (Create, Read, Update, Delete) operations over HTTP, strictly utilizing parameterized queries (`?`) to prevent SQL injection vulnerabilities.
+I connected an Express server to `books.db` and added routes to list, add, update, and delete books. The queries use `?` placeholders for values from requests.
 
 ---
 
@@ -119,7 +119,7 @@ PORT=3000
 
 ---
 
-## Viva Preparation Questions & Answers
+## Viva notes
 
 ### Q1: Why await the database call?
 * Database read and write operations are **asynchronous I/O operations** that interact with the file system or network. If we do not use `await`, JavaScript returns an unresolved `Promise` immediately instead of waiting for the database to complete the operation. Using `await` halts the execution of that specific `async` function until the database query resolves with actual rows or writes, ensuring consistency and preventing race conditions.
@@ -134,7 +134,7 @@ PORT=3000
 
 ---
 
-## Notes: Problems Faced & Solutions
+## Problems I faced
 
 1. **Native Addon Compilation on Windows & Node 26**:
    * *Problem:* `sqlite3` relies on a C++ native addon (`node_sqlite3.node`). Under newer Node runtimes, prebuild auto-detection occasionally requires explicit N-API prebuild installation.
